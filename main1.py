@@ -13,7 +13,7 @@ while True:
     print("slpeeping")
     #time.sleep(2)
 
-    for i in range(3):
+    for i in range(10):
         ledOnBoard.on()
         time.sleep(1)
         ledOnBoard.off()
@@ -22,7 +22,7 @@ while True:
     try:
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
         ota_updater.download_and_install_update_if_available()
-        for i in range(10):
+        for i in range(3):
             ledOnBoard.on()
             time.sleep(0.1)
             ledOnBoard.off()
