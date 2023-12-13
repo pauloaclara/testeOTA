@@ -30,4 +30,4 @@ while True:
     
     except:
         ledOnBoard.on()
-        time.sleep(1)
+        #time.sleep(1)
