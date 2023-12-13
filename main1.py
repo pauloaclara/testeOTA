@@ -7,15 +7,14 @@ ledOnBoard.on()
 
 firmware_url = "https://raw.githubusercontent.com/pauloaclara/testeOTA/main/"
 
-while True:
+#while True:
     ledOnBoard.on()
-  pause
-    try:
+    #try:
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
         ota_updater.download_and_install_update_if_available()
         if ledOnBoard.on():
             ledOnBoard.off()
         else:
             ledOnBoard.off()
-    except:
-        ledOnBoard.off()
+    #except:
+        ledOnBoard.on()
