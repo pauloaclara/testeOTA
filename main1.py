@@ -13,7 +13,7 @@ while True:
     print("slpeeping")
     time.sleep(2)
 
-    for i in range(10):
+    for i in range(3):
         ledOnBoard.on()
         time.sleep(1)
         ledOnBoard.off()
