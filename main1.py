@@ -11,7 +11,7 @@ firmware_url = "https://raw.githubusercontent.com/pauloaclara/testeOTA/main/"
 
 while True:
     print("slpeeping")
-    time.sleep(2)
+    #time.sleep(2)
 
     for i in range(3):
         ledOnBoard.on()
