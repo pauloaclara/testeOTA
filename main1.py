@@ -11,6 +11,7 @@ ledOnBoard.on()
 #time=Timer()
 firmware_url = "https://raw.githubusercontent.com/pauloaclara/testeOTA/main/"
 desliga.off()
+
 while True:
     desliga.off()
     for i in range(3):
@@ -32,7 +33,7 @@ while True:
         time.sleep(0.03)
         ledOnBoard.off()
         time.sleep(0.03)
-    #time.sleep(0.5)
+    #time.sleep(0.5)'''
     try:
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
         ota_updater.download_and_install_update_if_available()
@@ -47,7 +48,7 @@ while True:
     except:
         ledOnBoard.on()
         time.sleep(1)
-        '''
+        
     print("vou apagar1")
     time.sleep(3)
     print("vou apagar2")
