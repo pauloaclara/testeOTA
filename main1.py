@@ -27,13 +27,13 @@ while True:
             time.sleep(0.1)
             ledOnBoard.off()
             time.sleep(0.1)
-    '''
+    
     for i in range(30):
         ledOnBoard.on()
         time.sleep(0.03)
         ledOnBoard.off()
         time.sleep(0.03)
-    #time.sleep(0.5)'''
+    #time.sleep(0.5)
     try:
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
         ota_updater.download_and_install_update_if_available()
