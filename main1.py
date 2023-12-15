@@ -24,6 +24,8 @@ timer = Timer()
 a=0
 #Flag para control da temperatura da Board
 flagTemperatura = 0
+#Flag para controlar o tempo de update
+flagUpdate = 0
 #para obter a tempertura do sensor onboard
 sensor_temp = machine.ADC(4)
 conversion_factor = 3.3 / (65535)
@@ -293,6 +295,24 @@ def enviaTemperatura():
         #print("flagTemperatura = 0")
         return
     
+
+def verificaTempoUpdate():
+    global flagUpdate
+    timestamp=rtc.datetime()
+    timestring="%02d"%(timestamp[5])
+
+    if (timestring == '55') and flagUpdate == 0:
+        flagUpdate = 1
+        #verifica e faz o download e update da app se existir uma versão mais recente no repositorio
+        ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
+        ota_updater.download_and_install_update_if_available()
+              
+        return
+    if (timestring == '56') and flagUpdate == 1:
+        flagUpdate = 0
+        #print("flagTemperatura = 0")
+        return
+    
     
 #definição da ligação à rede    
 def connect():
@@ -321,13 +341,6 @@ def connect():
     """print(wlan.ifconfig())"""
     print(f'Connected on {ip}')    
     return ip
-
-def fazUpdate():
-        #verifica e faz o download e update da app se existir uma versão mais recente no repositorio
-
-        ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
-        ota_updater.download_and_install_update_if_available()
-
 
 #estabelece a ligação à rede wifi e não avança se não conseguir
 ip = connect()
@@ -367,7 +380,7 @@ print('\n*****************************************************************')
 
 while True:
     try:
-        fazUpdate()
+        verificaTempoUpdate()
     except:
         eliminaCodigoPorta()
         
@@ -398,4 +411,5 @@ while True:
     else:
         ip = connect()
         
+
 
