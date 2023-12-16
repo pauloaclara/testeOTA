@@ -5,3 +5,4 @@ SSID = 'Smart'
 #password da rede wifi
 PASSWORD = 'viva1234'
 #PASSWORD = '#919591859Joy
+#outra
