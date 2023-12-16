@@ -1,12 +1,16 @@
 #https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
+#https://www.digitalocean.com/community/tutorials/python-time-sleep
+#https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
 '''
 Código de luzes: ver no scrip
 
 '''
 from ota import OTAUpdater
 from machine import Pin, Timer, RTC
-import machine
 from secrets import SSID, PASSWORD
+#from threading import Thread
+import _thread 
+import machine
 import utime
 import network   # handles connecting to WiFi
 import urequests # handles making and servicing network requests
@@ -26,6 +30,8 @@ a=0
 flagTemperatura = 0
 #Flag para controlar o tempo de update
 flagUpdate = 0
+horaUpdate = 17
+tempoDormenciaUpdate = 86400
 #para obter a tempertura do sensor onboard
 sensor_temp = machine.ADC(4)
 conversion_factor = 3.3 / (65535)
@@ -74,7 +80,15 @@ key_list = [[1, 2, 3],\
 codigoPorta=str('')
 MAX_COMPRIMENTO_CODIGO_ENTRADA = 8
 
-
+def bloqueiaTeclado():
+    for x in range(0, 4):
+        row_list[x] = Pin(row_list[x], Pin.OUT)
+        row_list[x].value(0)
+        
+def ativaTeclado():
+    for x in range(0, 4):
+        row_list[x] = Pin(row_list[x], Pin.OUT)
+        row_list[x].value(1)
 
 def keypad(col, row):
   for r in row:
@@ -294,24 +308,50 @@ def enviaTemperatura():
         flagTemperatura = 0
         #print("flagTemperatura = 0")
         return
-    
+def secondThread():
+    while True:
+             
+        try:
+            #existe alguma nova versão de software?
+            verificaTempoUpdate()
+            #executaUpdate()
+        except:
+            eliminaCodigoPorta()
+        
+        time.sleep(2700) #45 minutos
+       
 
 def verificaTempoUpdate():
     global flagUpdate
     timestamp=rtc.datetime()
-    timestring="%02d"%(timestamp[5])
-
-    if (timestring == '55') and flagUpdate == 0:
+    timestring="%02d"%(timestamp[4])#minutos
+    
+    print("horaUpdate")
+    print(horaUpdate)
+    if (timestring == str(horaUpdate) and flagUpdate == 0):
+        print("horaUpdate2")
+        print(horaUpdate)
         flagUpdate = 1
-        #verifica e faz o download e update da app se existir uma versão mais recente no repositorio
-        ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
-        ota_updater.download_and_install_update_if_available()
-              
+        executaUpdate()             
         return
-    if (timestring == '56') and flagUpdate == 1:
+    
+    if (timestring == str(horaUpdate +1) and flagUpdate == 1):
         flagUpdate = 0
         #print("flagTemperatura = 0")
         return
+    
+def executaUpdate():
+    print("Hello, I'm here in the second thread writting every second")
+    utime.sleep(1)
+    #Bloqueia a keyPad para não existir uma interrupção do processo
+    #bloqueiaTeclado()
+    #verifica e faz o download e update da app se existir uma versão mais recente no repositorio
+    ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
+    ota_updater.download_and_install_update_if_available()
+    #ativa o teclado depois de ter verificado se existem updates. Se existir um update, este codigo nunca deverá ser executado
+    #ativaTeclado()
+        
+    return
     
     
 #definição da ligação à rede    
@@ -377,13 +417,10 @@ print('\n*****************************************************************')
 print('\n\t\t\t\tSYSTEM READY')
 print('\n*****************************************************************')
 
+_thread.start_new_thread(secondThread, ())
 
 while True:
-    try:
-        verificaTempoUpdate()
-    except:
-        eliminaCodigoPorta()
-        
+  
     try:
         enviaTemperatura()
         #print("envia 1")
@@ -408,8 +445,18 @@ while True:
         # end program cleanly
 
             #print('')
+        
+        ''' 
+        try:
+            #existe alguma nova versão de software?
+            verificaTempoUpdate()
+            #executaUpdate()
+        except:
+            eliminaCodigoPorta()
+       '''
     else:
         ip = connect()
         
+
 
 
