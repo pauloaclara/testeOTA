@@ -1,5 +1,5 @@
 ############################
-###FIZ UPDATE COM OTA AT 15/01/2024 após as 18:30h ###
+###FIZ UPDATE COM OTA AT 15/01/2024 após as 18:50 ###
 ##############################
 #https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
 #https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
@@ -155,7 +155,7 @@ def leKey():
         #teste para a ligação do keypad
         #print("*****")
         #print(keyLida)
-        ledOnBoardBlink(leKey)
+        #ledOnBoardBlink(leKey) #retirado para diminuir o delay na leitura das teclas
         validaKey(keyLida)
     #tempo para evitar que uma unica pressao seja lida 2 vezes seguidas    
     utime.sleep(0.1)
@@ -199,10 +199,11 @@ def constroiURL(stringCodigoLidoDoKeyboard):
 
 
 def abreAFechadura():
-    ledOnBoardBlink(abreAFechadura)
+    
     fechadura.value(True)#abre a fechadura
     time.sleep(0.5)
     fechadura.value(False)#fecha a fechadura
+    ledOnBoardBlink(abreAFechadura)
     
     return True
     
@@ -214,7 +215,7 @@ def abrePorta():
     leKey()
     if len(codigoPorta)>=MAX_COMPRIMENTO_CODIGO_ENTRADA:
         #print("tenho 8")
-        ledOnBoardBlink(codigoCompleto)
+        #ledOnBoardBlink(codigoCompleto) #comentado para reduzir o delay da pergunta/resposta ao servidor
         #print(codigoPorta)
         if constroiURL(codigoPorta):#constroi o URL, compara o valor recebido, retorna boolean
             abreAFechadura()
@@ -395,9 +396,9 @@ print('\n\tReinicia a ligação e permanece infinito até ter ligação')
 print('\n\tQuando obtem ligação o led on board fica apagado')
 print('\n\tquando acerta a hora faz 5x 0.5 segundos de luz e 0.1 apagado')
 print('\n\tse tiver erro a acertar a hora 10x 0.1 de luz com 0.1 apagado')
-print('\n\n\tQuando lê uma tecla do keypad, pisca 1x 0.3 segundos')
-print('\n\tQuando controi o código a envia, pisca 3x com espaço de 0.1 segundos')
-print('\n\tSe receber uma resposta autorizada da API, abre a fechadura com o led a acender por 0.5 segundos')
+#print('\n\n\tQuando lê uma tecla do keypad, pisca 1x 0.3 segundos')
+#print('\n\tQuando controi o código a envia, pisca 3x com espaço de 0.1 segundos')
+#print('\n\tSe receber uma resposta autorizada da API, abre a fechadura com o led a acender por 0.5 segundos')
 print('\n*****************************************************************')
 print('\n\t\t\t\tSYSTEM READY')
 print('\n*****************************************************************')
