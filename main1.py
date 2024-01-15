@@ -1,5 +1,5 @@
 ############################
-###FIZ UPDATE COM OTA AT 15/01/2024###
+###FIZ UPDATE COM OTA AT 15/01/2024 após as 18h ###
 ##############################
 #https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
 #https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
@@ -411,10 +411,10 @@ while True:
         #print("envia 1")
         except:
             eliminaCodigoPorta()
-        #try:
-        #    fazUpdate()
-        #except:
-        #    pass
+        try:
+            fazUpdate()
+        except:
+            pass
     
         if flagKeypad == 0:
             try:
