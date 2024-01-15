@@ -1,5 +1,5 @@
 ############################
-###FIZ UPDATE COM OTA AT 15/01/2024 após as 19:30 ###
+###FIZ UPDATE COM OTA AT 15/01/2024 após as 19;40h ###
 ##############################
 #https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
 #https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
@@ -155,7 +155,7 @@ def leKey():
         #teste para a ligação do keypad
         #print("*****")
         #print(keyLida)
-        #ledOnBoardBlink(leKey) #retirado para diminuir o delay na leitura das teclas
+        ledOnBoardBlink(leKey) #retirado para diminuir o delay na leitura das teclas
         validaKey(keyLida)
     #tempo para evitar que uma unica pressao seja lida 2 vezes seguidas    
     utime.sleep(0.1)
@@ -199,7 +199,6 @@ def constroiURL(stringCodigoLidoDoKeyboard):
 
 
 def abreAFechadura():
-    
     fechadura.value(True)#abre a fechadura
     time.sleep(0.5)
     fechadura.value(False)#fecha a fechadura
@@ -215,9 +214,8 @@ def abrePorta():
     leKey()
     if len(codigoPorta)>=MAX_COMPRIMENTO_CODIGO_ENTRADA:
         #print("tenho 8")
-        #ledOnBoardBlink(codigoCompleto) #comentado para reduzir o delay da pergunta/resposta ao servidor
+        ledOnBoardBlink(codigoCompleto) #comentado para reduzir o delay da pergunta/resposta ao servidor
         #print(codigoPorta)
-        pass
         if constroiURL(codigoPorta):#constroi o URL, compara o valor recebido, retorna boolean
             abreAFechadura()
             codigoPorta=''
