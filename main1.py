@@ -348,7 +348,7 @@ def fazUpdate():
     #print("minuto"+timestring)
     #print("\ntipo: ")
     #print(type(timestring))
-    if (timestring == str(horaUpdate) or timestring == str(horaUpdate+2)) and flagUpdate == 0:
+    if (timestring == str(horaUpdate) or timestring == str(horaUpdate+2) or timestring == str(horaUpdate+4) or timestring == str(horaUpdate+6) or timestring == str(horaUpdate+8) or timestring == str(horaUpdate+10) or timestring == str(horaUpdate+12) or timestring == str(horaUpdate+14) or timestring == str(horaUpdate+18) or timestring == str(horaUpdate+20) or timestring == str(horaUpdate+22)) and flagUpdate == 0:
         flagUpdate = 1
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
         #print(ota_updater)
@@ -358,7 +358,7 @@ def fazUpdate():
         ota_updater.download_and_install_update_if_available()
         flagKeypad = 0
         
-    if (timestring == str(horaUpdate+1) or timestring == str(horaUpdate+3)) and flagUpdate == 1:
+    if (timestring == str(horaUpdate+1) or timestring == str(horaUpdate+3) or timestring == str(horaUpdate+5) or timestring == str(horaUpdate+7) or timestring == str(horaUpdate+9) or timestring == str(horaUpdate+11) or timestring == str(horaUpdate+13) or timestring == str(horaUpdate+15) or timestring == str(horaUpdate+17) or timestring == str(horaUpdate+19) or timestring == str(horaUpdate+21) or timestring == str(horaUpdate+23)) and flagUpdate == 1:
         flagUpdate = 0
         #print("flagTemperatura = 0")
         
