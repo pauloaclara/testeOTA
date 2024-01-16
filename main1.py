@@ -1,5 +1,5 @@
 ############################
-###FIZ UPDATE COM OTA AT 16/01/2024 após as 19:20h ###
+###FIZ UPDATE COM OTA AT 16/01/2024 após as 19:35h ###
 ##############################
 #https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
 #https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
