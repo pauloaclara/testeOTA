@@ -28,6 +28,7 @@ import ujson
 
 ledOnBoard = Pin("LED", Pin.OUT)
 timer = Timer()
+temporiradorTeste=Timer()
 a=0
 #flagUpdate para que o update seja feito apenas se a flag estiver disponivel
 flagUpdate = 0
@@ -223,6 +224,12 @@ def abrePorta():
         #limpa o codigo utilizado
         codigoPorta=''       
         return
+
+def tempo2 (timer): #definindo função callback
+    global ledOnBoard
+    ledOnBoard.toggle()
+
+temporizadorTeste.init(period = 500, mode = Timer.PERIODIC, callback = tempo2)
     
 def ledOnBoardBlink(funcao):
     if funcao == abreAFechadura:
