@@ -28,7 +28,7 @@ import ujson
 
 ledOnBoard = Pin("LED", Pin.OUT)
 timer = Timer()
-temporiradorTeste=Timer()
+temporiradorTeste=Timer() #temporizador criado para validar a hipotese de non blocker timers, utiliza a função tempo 2 e esta variavel para o resultado
 a=0
 #flagUpdate para que o update seja feito apenas se a flag estiver disponivel
 flagUpdate = 0
