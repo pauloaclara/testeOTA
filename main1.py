@@ -349,7 +349,7 @@ def fazUpdate():
     #print("\ntipo: ")
     #print(type(timestring))
     #if (timestring == str(horaUpdate) or timestring == str(horaUpdate+2) or timestring == str(horaUpdate+4) or timestring == str(horaUpdate+6) or timestring == str(horaUpdate+8) or timestring == str(horaUpdate+10) or timestring == str(horaUpdate+12) or timestring == str(horaUpdate+14) or timestring == str(horaUpdate+18) or timestring == str(horaUpdate+20) or timestring == str(horaUpdate+22)) and flagUpdate == 0:
-    flagUpdate = 1
+    #flagUpdate = 1
     ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
     #print(ota_updater)
     #print("+++++++++++++++")
