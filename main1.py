@@ -1,5 +1,5 @@
 ############################
-###FIZ UPDATE COM OTA AT 16/01/2024 após as 19:35h ###
+###FIZ UPDATE COM OTA AT 16/01/2024 após as 20:22h ###
 ##############################
 #https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
 #https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
@@ -355,19 +355,19 @@ def fazUpdate():
     #print("minuto"+timestring)
     #print("\ntipo: ")
     #print(type(timestring))
-    if (timestring == str(horaUpdate) or timestring == str(horaUpdate+2) or timestring == str(horaUpdate+4) or timestring == str(horaUpdate+6) or timestring == str(horaUpdate+8) or timestring == str(horaUpdate+10) or timestring == str(horaUpdate+12) or timestring == str(horaUpdate+14) or timestring == str(horaUpdate+18) or timestring == str(horaUpdate+20) or timestring == str(horaUpdate+22)) and flagUpdate == 0:
-        flagUpdate = 1
-        ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
-        #print(ota_updater)
-        #print("+++++++++++++++")
-        #ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "novo")
-        #ota_updater.download_and_install_update_if_available()
-        ota_updater.download_and_install_update_if_available()
-        flagKeypad = 0
+    #if (timestring == str(horaUpdate) or timestring == str(horaUpdate+2) or timestring == str(horaUpdate+4) or timestring == str(horaUpdate+6) or timestring == str(horaUpdate+8) or timestring == str(horaUpdate+10) or timestring == str(horaUpdate+12) or timestring == str(horaUpdate+14) or timestring == str(horaUpdate+18) or timestring == str(horaUpdate+20) or timestring == str(horaUpdate+22)) and flagUpdate == 0:
+    flagUpdate = 1
+    ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
+    #print(ota_updater)
+    #print("+++++++++++++++")
+    #ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "novo")
+    #ota_updater.download_and_install_update_if_available()
+    ota_updater.download_and_install_update_if_available()
+    flagKeypad = 0
         
-    if (timestring == str(horaUpdate+1) or timestring == str(horaUpdate+3) or timestring == str(horaUpdate+5) or timestring == str(horaUpdate+7) or timestring == str(horaUpdate+9) or timestring == str(horaUpdate+11) or timestring == str(horaUpdate+13) or timestring == str(horaUpdate+15) or timestring == str(horaUpdate+17) or timestring == str(horaUpdate+19) or timestring == str(horaUpdate+21) or timestring == str(horaUpdate+23)) and flagUpdate == 1:
-        flagUpdate = 0
-        #print("flagTemperatura = 0")
+    #if (timestring == str(horaUpdate+1) or timestring == str(horaUpdate+3) or timestring == str(horaUpdate+5) or timestring == str(horaUpdate+7) or timestring == str(horaUpdate+9) or timestring == str(horaUpdate+11) or timestring == str(horaUpdate+13) or timestring == str(horaUpdate+15) or timestring == str(horaUpdate+17) or timestring == str(horaUpdate+19) or timestring == str(horaUpdate+21) or timestring == str(horaUpdate+23)) and flagUpdate == 1:
+    #flagUpdate = 0
+    #print("flagTemperatura = 0")
         
     flagKeypad = 0
 
