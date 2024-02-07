@@ -545,23 +545,23 @@ def connect():
     print(f'Connected on {ip}')    
     return ip
 
-def fazUpdate():
+def fazUpdate(Source):
     global flagUpdate
     global flagKeypad
     flagKeypad = 1
-    timestamp=rtc.datetime()
-    timestring="%02d"%(timestamp[5])
+    #timestamp=rtc.datetime()#deixou de ser usado com a entrada do timer
+    #timestring="%02d"%(timestamp[5])#deixou de ser usado com a entrada do timer
     #print("minuto"+timestring)
     #print("\ntipo: ")
     #print(type(timestring))
     #if (timestring == str(horaUpdate) or timestring == str(horaUpdate+2) or timestring == str(horaUpdate+4) or timestring == str(horaUpdate+6) or timestring == str(horaUpdate+8) or timestring == str(horaUpdate+10) or timestring == str(horaUpdate+12) or timestring == str(horaUpdate+14) or timestring == str(horaUpdate+18) or timestring == str(horaUpdate+20) or timestring == str(horaUpdate+22)) and flagUpdate == 0:
     #flagUpdate = 1
     ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main1.py")
-    #print(ota_updater)
-    #print("+++++++++++++++")
+    print(ota_updater)
+    print("+++++++++++++++")
     #ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "novo")
-    #ota_updater.download_and_install_update_if_available()
     ota_updater.download_and_install_update_if_available()
+    #ota_updater.download_and_install_update_if_available()#---- não vai efetuar o update, teste para ver se o timer funciona
     flagKeypad = 0
         
     #if (timestring == str(horaUpdate+1) or timestring == str(horaUpdate+3) or timestring == str(horaUpdate+5) or timestring == str(horaUpdate+7) or timestring == str(horaUpdate+9) or timestring == str(horaUpdate+11) or timestring == str(horaUpdate+13) or timestring == str(horaUpdate+15) or timestring == str(horaUpdate+17) or timestring == str(horaUpdate+19) or timestring == str(horaUpdate+21) or timestring == str(horaUpdate+23)) and flagUpdate == 1:
@@ -571,7 +571,8 @@ def fazUpdate():
     flagKeypad = 0
 
        
-
+Update_Timer = Timer(period=60000, mode=Timer.PERIODIC, callback=fazUpdate)
+#Blue_Timer = Timer(period=60000, mode=Timer.PERIODIC, callback=Blue_Blinker)
 
 #estabelece a ligação à rede wifi e não avança se não conseguir
 ip = connect()
