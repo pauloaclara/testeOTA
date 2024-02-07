@@ -1,8 +1,22 @@
-############################
-###FIZ UPDATE COM OTA AT 16/01/2024 após as 20:55h ###
-##############################
 #https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
 #https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
+#https://github.com/octopuslab-cz/micropython-keypad -------
+#https://www.youtube.com/watch?v=aRQMDSmFGCo ------ com buffer
+#https://github.com/brettmclean/pad4pi
+#https://www.youtube.com/watch?v=lzv9cwdU_ok
+#https://www.youtube.com/watch?v=7-PoXmxeCmQ
+#https://www.youtube.com/watch?v=7-PoXmxeCmQ
+#https://www.google.com/search?q=micropython+keypad+keyboard+input&sca_esv=601135296&rlz=1C1FCXM_pt-PTPT1039PT1039&sxsrf=ACQVn0_lROLk6WnordGKv_kfUyfVGE9Jkg%3A1706122724602&ei=5F2xZbiWJNyI9u8P7Kq3qAU&udm=&oq=micropython+keypad+input&gs_lp=Egxnd3Mtd2l6LXNlcnAiGG1pY3JvcHl0aG9uIGtleXBhZCBpbnB1dCoCCAAyCBAhGKABGMMEMggQIRigARjDBEixN1CkC1iFGHACeAGQAQCYAdUCoAGxDKoBBTItNC4yuAEByAEA-AEBwgIKEAAYRxjWBBiwA8ICBhAAGAcYHsICCBAAGAgYBxgewgIKECEYChigARjDBOIDBBgAIEGIBgGQBgg&sclient=gws-wiz-serp#fpstate=ive&vld=cid:ad1ca188,vid:7-PoXmxeCmQ,st:0
+#https://www.instructables.com/Raspberry-Pi-Pico-and-4x3-Keypad/
+#https://www.electrosoftcloud.com/en/multithreaded-script-on-raspberry-pi-pico-and-micropython/
+#https://github.com/octopuslab-cz/micropython-keypad -------
+#https://www.youtube.com/watch?v=aRQMDSmFGCo ------ com buffer
+#https://github.com/brettmclean/pad4pi
+#https://www.youtube.com/watch?v=lzv9cwdU_ok
+#https://www.youtube.com/watch?v=7-PoXmxeCmQ
+#https://www.youtube.com/watch?v=7-PoXmxeCmQ
+#https://www.google.com/search?q=micropython+keypad+keyboard+input&sca_esv=601135296&rlz=1C1FCXM_pt-PTPT1039PT1039&sxsrf=ACQVn0_lROLk6WnordGKv_kfUyfVGE9Jkg%3A1706122724602&ei=5F2xZbiWJNyI9u8P7Kq3qAU&udm=&oq=micropython+keypad+input&gs_lp=Egxnd3Mtd2l6LXNlcnAiGG1pY3JvcHl0aG9uIGtleXBhZCBpbnB1dCoCCAAyCBAhGKABGMMEMggQIRigARjDBEixN1CkC1iFGHACeAGQAQCYAdUCoAGxDKoBBTItNC4yuAEByAEA-AEBwgIKEAAYRxjWBBiwA8ICBhAAGAcYHsICCBAAGAgYBxgewgIKECEYChigARjDBOIDBBgAIEGIBgGQBgg&sclient=gws-wiz-serp#fpstate=ive&vld=cid:ad1ca188,vid:7-PoXmxeCmQ,st:0
+#https://www.youtube.com/watch?v=HKhY1qV8JbY ------------- timers
 '''
 Código de luzes: ver no scrip
 
@@ -26,6 +40,8 @@ import socket
 import struct
 import ujson
 
+#import digitalmatrix
+
 ledOnBoard = Pin("LED", Pin.OUT)
 timer = Timer()
 a=0
@@ -38,7 +54,7 @@ flagTemperatura = 0
 #para obter a tempertura do sensor onboard
 sensor_temp = machine.ADC(4)
 conversion_factor = 3.3 / (65535)
-#pin utilizado para abrir a porta
+##########################################pin utilizado para abrir a porta########################
 fechadura = Pin(1, Pin.OUT)
 #iniciação da variavel para utilização na função abrePorta para verificar se o codigo está construido na totalidade
 codigoCompleto = 1
@@ -47,12 +63,16 @@ flagKeypad = 0
 #Resposta esperada/autorizada pela API para abrir a porta
 codigoAberturaPortaAPI=1000
 #PIN para fazer o reset à board
-desliga = Pin(0, Pin.OUT)
+desliga = Pin(0, Pin.OUT) #não usado, seria para fazer um reset remoto com um transistor
+codigoPorta=''
+MAX_COMPRIMENTO_CODIGO_ENTRADA = 8
 # Connect to network
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 #path para atualizações no github
-firmware_url = "https://raw.githubusercontent.com/pauloaclara/testeOTA/main/"
+#firmware_url = "https://raw.githubusercontent.com/pauloaclara/testesOTA/main/"
+
+User_Key = "null"
 
 #ajuste das contas para a  hora
 NTP_DELTA = 2208988800
@@ -62,11 +82,89 @@ rtc=machine.RTC()
 
 #mac do equipamento
 mac = ubinascii.hexlify(wlan.config('mac'),':').decode()
+#testa o MAC para ver se é a PIC de testes.
+if(mac == "d8:3a:dd:66:37:a1"):
+    print("o meu mac é igual ao teu, sou utilizado apenas para testes")
+    firmware_url = "https://raw.githubusercontent.com/pauloaclara/testeOTA/main/"
 
 #raiz da API
 apiBaseRoot = 'https://pcpac.com/homes.pcpac.com/API102023/PHPREST/API/'
 
 
+#setup the inputs and outputs according to the matrix keypad's wiring
+R1 = machine.Pin(2,machine.Pin.OUT)
+R2 = machine.Pin(3,machine.Pin.OUT)
+R3 = machine.Pin(4,machine.Pin.OUT)
+R4 = machine.Pin(5,machine.Pin.OUT)
+C1 = machine.Pin(6,machine.Pin.IN,machine.Pin.PULL_DOWN)
+C2 = machine.Pin(7,machine.Pin.IN,machine.Pin.PULL_DOWN)
+C3 = machine.Pin(8,machine.Pin.IN,machine.Pin.PULL_DOWN)
+#C4 = machine.Pin(8,machine.Pin.IN,machine.Pin.PULL_DOWN)
+
+def Keyboard_Scanner():  #This function will handle the keyboard and run in its own thread.
+    global User_Key
+    Lock = "UNLOCKED"    #Variable Lock is used to compare against for action to occur
+    
+    while True:                 #loop forever
+        Key_Pressed = "null"    #Set variable to 'null' at start of scan
+        
+        #Power each row one by one. While a row is powered, test the four columns
+        #to see if any are "high", thus being pressed.  If a button is pressed
+        #record that button value in variable Key_Pressed.
+        R1.value(1)             #set power ON for row 1, off for the other three
+        R2.value(0)
+        R3.value(0)
+        R4.value(0)    
+        if C1.value() == True: Key_Pressed = 1 #check each button in column
+        if C2.value() == True: Key_Pressed = 2
+        if C3.value() == True: Key_Pressed = 3
+#        if C4.value() == True: Key_Pressed = "A"
+                  
+        R1.value(0)             #set power ON for row 2, off for the other three
+        R2.value(1)
+        R3.value(0)
+        R4.value(0)    
+        if C1.value() == True: Key_Pressed = 4
+        if C2.value() == True: Key_Pressed = 5
+        if C3.value() == True: Key_Pressed = 6
+#        if C4.value() == True: Key_Pressed = "B"
+            
+        R1.value(0)             #set power ON for row 3, off for the other three
+        R2.value(0)
+        R3.value(1)
+        R4.value(0)    
+        if C1.value() == True: Key_Pressed = 7
+        if C2.value() == True: Key_Pressed = 8
+        if C3.value() == True: Key_Pressed = 9
+#        if C4.value() == True: Key_Pressed = "C"
+            
+        R1.value(0)             #set power ON for row 4, off for the other three
+        R2.value(0)
+        R3.value(0)
+        R4.value(1)    
+        if C1.value() == True: Key_Pressed = '*'
+        if C2.value() == True: Key_Pressed = 0
+        if C3.value() == True: Key_Pressed = '#'
+#        if C4.value() == True: Key_Pressed = "D"
+ 
+        # if lock was Locked, check to see if it can be unlocked
+        # If we get through the keypad scan without seeing a Key_Press
+        # value other than null, no key is pressed, so lets unlock the function.  
+        if (Lock == "LOCKED") and (Key_Pressed == "null"):
+            Lock = "UNLOCKED"
+            
+        # Key was pressed and because Lock wasn't locked, this is a new key press
+        # Lock the routine from processing another keypress until
+        # User_Key is processed in the main loop AND the the button was released
+        # which prevents key repeating
+        #
+        if (Lock == "UNLOCKED") and (Key_Pressed != "null"):
+            Lock = "LOCKED"
+            User_Key = Key_Pressed
+        
+        utime.sleep(.02) #slow down the loop a bit as full speed isn't needed
+
+'''
 row_list = [2, 3, 4, 5]  
 col_list = [6, 7, 8]
 
@@ -96,14 +194,17 @@ def keypad(col, row):
       r.value(1)
       return (key)
     r.value(1)
-    
+'''  
 def eliminaCodigoPorta():
     global codigoPorta
     codigoPorta=''
     return True
     
 def souAsterisco(keyLida):
+    
     if keyLida == "*":
+        #print("estou no asterisco")
+        #print(keylida)
         eliminaCodigoPorta()
         #print("sou um asterisco")
         #print(keyLida)
@@ -111,13 +212,29 @@ def souAsterisco(keyLida):
     
 def souCardinal(keyLida):
     if keyLida == "#":
+        #print("estou souCardinal")
         #print("sou um cardinal")
+        
         #print(keyLida)
+        #print("imprimi o cardinal?")
         return True
     
 def souNumero(keyLida):
+    #print("estouno souNumero\n")
+    #print("recebi\n")
+    #print(keyLida)
     if keyLida >= 0 and keyLida <= 9:
+        #print("passei a condição, tenho o numero\n")
+        #print(keyLida)
+        #print("e o tipo: \n")
+        #print(type(keyLida))
+        
         keyLida = str(keyLida)
+        #print("fiz a transformação para string \n")
+        #print(keyLida)
+        #print("passei o tipo (str): \n")
+        #print(type(keyLida))
+        #print(keyLida)
         constroiCodigoPorta(keyLida)
         #print("sou um numero")
         #print(keyLida)
@@ -125,48 +242,108 @@ def souNumero(keyLida):
     
 def constroiCodigoPorta(keyLida):
     global codigoPorta
+    #print("estou no codigo porta\n")
+    #print("recebi: ")
+    #print(type(keyLida))
+    #print(keyLida)
+    #print("codigo acutal da porta")
+    #print(codigoPorta)
+    #print("comprimento do codigo da porta")
+    #print(len(codigoPorta))
     if len(codigoPorta)<=MAX_COMPRIMENTO_CODIGO_ENTRADA:
+        #print("passei a condição de menor do que o maximo comprimento")
+        #print("e tenho o codigo: ")
+        #print(codigoPorta)
         codigoPorta = codigoPorta + keyLida
+        #print("depois de acrescentado o ultimo passei a ter")
+        #print(codigoPorta)
     else:
+        #print("se entre aqui, entrei erradamente no else do constroiCodigoPorta")
         codigoPorta=''
     #print(codigoPorta)
     return True  
     
 def validaKey(keyLida):
+    #print("estou no validaKey\nrecebi: ")
+    #print(keyLida)
+    #print("sou do tipo")
+    #print(type(keyLida))
     if isinstance(keyLida, str):
+        #print("sou do tipo depois do isinstace")
+        #print(type(keyLida))
+    
+        
         if souAsterisco(keyLida):
             #print("sou asterisco")
-            pass
+            return
         elif souCardinal(keyLida):
             #print("sou cardinal")
-            pass
-    elif souNumero(keyLida):
-        #print("sou numero")
-        pass
+            return
+    if isinstance(keyLida, int):
+        #print("sou do tipo depois do isinstace no numero")
+        #print(type(keyLida))
+        #print("sou numero-----")
+        #print(keyLida)
+        souNumero(keyLida)
+        return
     else:
         #print("Erro, sou desconhecido")
         return False
-        
+'''        
 def leKey():
     global keyLida
     keyLida = keypad(col_list, row_list)
  #  validaKey(keyLida)
     if keyLida != None:
         #teste para a ligação do keypad
-        #print("*****")
-        #print(keyLida)
-        ledOnBoardBlink(leKey) #retirado para diminuir o delay na leitura das teclas
+        print("*****")
+        print(keyLida)
+        ledOnBoardBlink(leKey) #nao retirado, d«a erro, para diminuir o delay na leitura das teclas
         validaKey(keyLida)
     #tempo para evitar que uma unica pressao seja lida 2 vezes seguidas    
-    utime.sleep(0.1)
+    utime.sleep(0.15)
     return
+'''
+'''
+if User_Key != "null":             #Check for value in User_Key and act on it 
+            print(User_Key)
+            #Key_Code = User_Key            #Copy User_Key to  a variable used within main loop
+            User_Key = "null"              #Reset User_Key to null so it can be written to again
+            print("Key Code =",Key_Code)
+        
+    utime.sleep(.1)  # A sleep just to slow things down to mimic work being performed
+'''    #here in the main loop is where all the normal processing happens
+def leKey():#nova
+    global keyLida
+    global User_Key
+    global Key_Code
+    #print("estou na função")
+    #global User_Key
+    #global codigoPorta
+    #codigoCompleto = 1
+    if User_Key != "null":             #Check for value in User_Key and act on it 
+            #print(User_Key)
+            Key_Code = User_Key            #Copy User_Key to  a variable used within main loop
+            keyLida = Key_Code
+            User_Key = "null"              #Reset User_Key to null so it can be written to again
+            #print("Key Code =",Key_Code)
+            #validaKey(Key_Code)
+            #print("*****")
+            #print(keyLida)
+            ledOnBoardBlink(leKey) #nao retirado, d«a erro, para diminuir o delay na leitura das teclas
+                                    #no ultimos testes efetuados na board de testes, depois de retirado não dei erro.
+            validaKey(keyLida)
+        
+    utime.sleep(.1)  # A sleep just to slow things down to mimic work being performed
+    #here in the main loop is where all the normal processing happens
+    return
+
+
 
 def validaResposta(resposta):
     #ver codigo de erro na API do servidor
     if resposta == codigoAberturaPortaAPI:
         return True
-    else:
-        return False
     
 
 def constroiURL(stringCodigoLidoDoKeyboard):
@@ -185,14 +362,24 @@ def constroiURL(stringCodigoLidoDoKeyboard):
     #print(stringTotal)
     #print(r.content)
     #print(r)
-    if r.json != '':
-        resposta = r.json()
-        #print(resposta)
-        if validaResposta(resposta):           
-            print(r.json())
-            r.close()
-            return True
+    try:
+        if r.json != '':
+            resposta = r.json()
+            #print(resposta)
             
+            if (resposta==codigoAberturaPortaAPI):
+                #print(r)
+                print(r.json())
+                r.close()
+                return True
+            #else:
+            #    print(r)
+            #print(r.json())
+             #   return False
+    except:
+        return False
+        #pass
+                
     return False
     
     
@@ -206,7 +393,7 @@ def abreAFechadura():
     
     return True
     
-    
+# ver nova fucção abre porta    
 def abrePorta():
     global codigoPorta
     codigoCompleto = 1
@@ -216,14 +403,33 @@ def abrePorta():
         #print("tenho 8")
         ledOnBoardBlink(codigoCompleto) #comentado para reduzir o delay da pergunta/resposta ao servidor
         #print(codigoPorta)
+        
         if constroiURL(codigoPorta):#constroi o URL, compara o valor recebido, retorna boolean
             abreAFechadura()
+            #print("não abri a porta")
+            #limpa o codigo utilizado
             codigoPorta=''
             
         #limpa o codigo utilizado
         codigoPorta=''       
         return
+
+'''
+def abrePorta():
+    #print("estou na função")
+    global User_Key
+    global codigoPorta
+    codigoCompleto = 1
+    if User_Key != "null":             #Check for value in User_Key and act on it 
+            print(User_Key)
+            #Key_Code = User_Key            #Copy User_Key to  a variable used within main loop
+            User_Key = "null"              #Reset User_Key to null so it can be written to again
+            print("Key Code =",Key_Code)
+        
+    utime.sleep(.1)  # A sleep just to slow things down to mimic work being performed
+    #here in the main loop is where all the normal processing happens
     
+'''
 def ledOnBoardBlink(funcao):
     if funcao == abreAFechadura:
         ledOnBoard.on()
@@ -235,7 +441,7 @@ def ledOnBoardBlink(funcao):
         ledOnBoard.off()
     if funcao == leKey:
         ledOnBoard.on()
-        time.sleep(0.3)
+        time.sleep(0.1)
         ledOnBoard.off() 
     if funcao == codigoCompleto:
         for i in range(3):
@@ -404,6 +610,22 @@ print('\n*****************************************************************')
 #Chama a função em segundo thread
 #_thread.start_new_thread(fazUpdate, ())
 
+
+_thread.start_new_thread(Keyboard_Scanner,())  #This starts the thread running 
+
+'''
+#Main Loop to do all the other work needed
+while True:
+    if User_Key != "null":             #Check for value in User_Key and act on it 
+        Key_Code = User_Key            #Copy User_Key to  a variable used within main loop
+        User_Key = "null"              #Reset User_Key to null so it can be written to again
+        print("Key Code =",Key_Code)
+    
+    utime.sleep(.1)  # A sleep just to slow things down to mimic work being performed
+    #here in the main loop is where all the normal processing happens
+
+
+''' #após a nova inclusão da "biblioteca" keypad + thread
 while True:
     if wlan.isconnected():
         try:
@@ -411,10 +633,10 @@ while True:
         #print("envia 1")
         except:
             eliminaCodigoPorta()
-        try:
-            fazUpdate()
-        except:
-            pass
+        #try:
+            #fazUpdate()
+        #except:
+            #pass
     
         if flagKeypad == 0:
             try:
@@ -426,5 +648,7 @@ while True:
             except:
                 pass
     else:
-        print("estou desligado")
+        print("estou desligado do wifi")
         ip = connect()
+        
+
