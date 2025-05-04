@@ -9,6 +9,7 @@ alterada o update_no_reset_no_rename
 depois de ter modificado o ota3, esqueci de mudar aqui a biblioteca
 tinha um erro de identação em ota3
 sem mudar o nome
+sei lá
 '''
 
 from ota3 import OTAUpdater
