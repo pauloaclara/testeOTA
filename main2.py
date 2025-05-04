@@ -3,6 +3,7 @@ https://raw.githubusercontent.com/pauloaclara/testeOTA/main/
 atualiza o ficheiro outro e reinicia
 para atualizar ligado ao PC - 20:02
 para atualizar o main2 ligado à bateria/pilhas
+2ª tentativa ligada à bateria pois parecia que tinha um fio desligado
 '''
 
 from ota import OTAUpdater
