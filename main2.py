@@ -19,6 +19,8 @@ ledOnBoard.on()
 #time=Timer()
 firmware_url = "https://raw.githubusercontent.com/pauloaclara/testeOTA/main/"
 desliga.off()
+ledOnBoard.on()
+time.sleep(2)
 
 
 while True:
