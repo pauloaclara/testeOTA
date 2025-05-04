@@ -2,6 +2,7 @@
 https://raw.githubusercontent.com/pauloaclara/testeOTA/main/
 atualiza o ficheiro outro e reinicia
 para atualizar ligado ao PC - 20:02
+para atualizar o main2 ligado à bateria/pilhas
 '''
 
 from ota import OTAUpdater
