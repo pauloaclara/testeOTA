@@ -5,6 +5,7 @@ para atualizar ligado ao PC - 20:02
 para atualizar o main2 ligado à bateria/pilhas
 2ª tentativa ligada à bateria pois parecia que tinha um fio desligado
 04052025 nova tentativa com o OTA2 - vai ser necessário utilizar uma flag para renomear o ficheiro no main antes de chamar o programa principal
+alterada o update_no_reset_no_rename
 '''
 
 from ota2 import OTAUpdater
