@@ -6,7 +6,7 @@ para atualizar o main2 ligado à bateria/pilhas
 2ª tentativa ligada à bateria pois parecia que tinha um fio desligado
 '''
 
-from ota import OTAUpdater
+from ota2 import OTAUpdater
 from WIFI_CONFIG import SSID, PASSWORD
 from machine import Pin, Timer, RTC
 import utime
