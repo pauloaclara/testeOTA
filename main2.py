@@ -1,6 +1,7 @@
 '''
 https://raw.githubusercontent.com/pauloaclara/testeOTA/main/
 atualiza o ficheiro outro e reinicia
+para atualizar ligado ao PC - 20:02
 '''
 
 from ota import OTAUpdater
